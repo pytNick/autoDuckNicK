@@ -1,8 +1,33 @@
-$imgURL = "https://imgur.com/TUwv8kH.jpg"
-			Invoke-WebRequest -Uri $imgURL -OutFile $env:TEMP\PSLockScreenWallpaper.jpg
-			Copy-Item $env:TEMP\PSLockScreenWallpaper.jpg "C:\Windows\System32\LockScreen.jpg" -Force
-			Write-Host "Creating registry path $("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP")."
-			New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" -Force | Out-Null
-			New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" -Name "LockScreenImageStatus" -Value "1" -PropertyType DWORD -Force | Out-Null
-        	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" -Name "LockScreenImagePath" -Value C:\Windows\System32\LockScreen.jpg -PropertyType STRING -Force | Out-Null
-        	New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" -Name "LockScreenImageUrl" -Value C:\Windows\System32\LockScreen.jpg -PropertyType STRING -Force | Out-Null
+function Show-MainMenu {
+	param (
+		
+	)
+	Clear-Host
+	Write-Host -NoNewLine -ForegroundColor Green 'Username: '
+	Write-Host $env:USERNAME
+	Write-Host -NoNewLine -ForegroundColor Green 'Computername: '
+	Write-Host $env:COMPUTERNAME
+	Write-Host -NoNewLine -ForegroundColor Green 'Windows Edition: '
+	Get-WmiObject win32_operatingsystem | ForEach-Object caption
+	Write-Host -NoNewLine -ForegroundColor Green 'Windows Version: '
+	(Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').ReleaseId
+	
+	Write-Host @"
+
+===== Options: =====
+	1) Lock Screen
+	...
+	q) Quit
+ 
+"@
+}
+do {
+	Show-MainMenu
+	$key = $Host.UI.RawUI.ReadKey()
+	switch ($key.Character) {
+	
+	'1' {
+		# code here
+	}
+			pause
+} until($key.Character -eq 'q')
